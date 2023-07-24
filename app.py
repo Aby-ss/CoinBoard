@@ -27,7 +27,7 @@ def get_daily_stock_data(api_key, symbol):
         else:
             time_series = data['Time Series (Daily)']
             for date, values in time_series.items():
-                print(f"Date: {date}, Open: {values['1. open']}, High: {values['2. high']}, Low: {values['3. low']}, Close: {values['4. close']}, Volume: {values['5. volume']}")
+                print(Panel(f"Date: {date}, Open: {values['1. open']}, High: {values['2. high']}, Low: {values['3. low']}, Close: {values['4. close']}, Volume: {values['5. volume']}", title=f"{symbol}-{date}", title_align="left", border_style="bold white", box=box.SQUARE))
                 
     except requests.exceptions.RequestException as e:
         print(f"Error: {e}")
