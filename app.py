@@ -7,6 +7,13 @@ from rich.layout import Layout
 from rich.traceback import install
 install(show_locals=True)
 
+from textual.app import App, ComposeResult
+from textual.containers import HorizontalScroll, VerticalScroll
+from textual.containers import Horizontal, Vertical
+from textual.screen import Screen
+from textual.widgets import Placeholder, Static
+from textual.widgets import Header, Footer
+
 layout = Layout()
 
 def get_daily_stock_data(symbol):
