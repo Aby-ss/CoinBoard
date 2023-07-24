@@ -46,7 +46,7 @@ class CoinBoard(App):
 
         chart_params = {
             'function': function,
-            'symbol': "AAPL",
+            'symbol': "MSFT",
             'outputsize': output_size,
             'apikey': "78H5RH2BRNG4G5Z6"
         }
@@ -74,7 +74,7 @@ class CoinBoard(App):
         
         company_overview_params = {
         'function': "OVERVIEW",
-        'symbol': "AAPL",
+        'symbol': "MSFT",
         'apikey': "78H5RH2BRNG4G5Z6"
     }
             
@@ -106,7 +106,7 @@ class CoinBoard(App):
 
                 params = {
                     'function': function,
-                    'symbol': "AAPL",
+                    'symbol': "MSFT",
                     'apikey': "78H5RH2BRNG4G5Z6"
                 }
 
@@ -144,7 +144,7 @@ class CoinBoard(App):
                         print("Balance sheet data not available for this symbol.")
                         return None     
                            
-            balance_sheet_data = balance_sheet("78H5RH2BRNG4G5Z6", "AAPL")
+            balance_sheet_data = balance_sheet("78H5RH2BRNG4G5Z6", "MSFT")
             if balance_sheet_data:
 
                 fiscal_date_ending, total_assets, total_liabilities, total_equity, cash_and_equivalents, gross_profit = balance_sheet_data
@@ -171,17 +171,43 @@ class CoinBoard(App):
                         print("Cash flow data not available for this symbol.")
                         return None
 
-            cash_flow_data = cash_flow("78H5RH2BRNG4G5Z6", "AAPL")
+            cash_flow_data = cash_flow("78H5RH2BRNG4G5Z6", "MSFT")
             if cash_flow_data:
                 fiscal_date_ending, operating_cashflow, investing_cashflow, financing_cashflow, free_cashflow, gross_profit = cash_flow_data
                 
                 cash_flow_variables_text = f"Fiscal Date Ending: {fiscal_date_ending}\nOperating Cash Flow: {operating_cashflow}\nInvesting Cash Flow: {investing_cashflow}\nFinancing Cash Flow: {financing_cashflow}\nFree Cash Flow: {free_cashflow}\nGross Profit: {gross_profit}"
+
+            # --------------------------------------------- Income Statement ---------------------------------------------
+            
+            def income_statement(api_key, symbol):
+                data = get_financial_data('INCOME_STATEMENT')
+                if data:
+                    income_statement_data = data.get('annualReports', [])
+                    if income_statement_data:
+                        important_variables = (
+                            income_statement_data[0].get('fiscalDateEnding', ''),
+                            income_statement_data[0].get('totalRevenue', ''),
+                            income_statement_data[0].get('netIncome', ''),
+                            income_statement_data[0].get('operatingIncome', ''),
+                            income_statement_data[0].get('grossProfit', '')
+                        )
+                        return important_variables
+                    else:
+                        print("Income statement data not available for this symbol.")
+                        return None
+
+            income_statement_data = income_statement("78H5RH2BRNG4G5Z6", "MSFT")
+            if income_statement_data:
+                fiscal_date_ending, total_revenue, net_income, operating_income, gross_profit = income_statement_data
+                
+                income_statement_variables_text = f"Fiscal Date Ending: {fiscal_date_ending}\nTotal Revenue: {total_revenue}\nNet Income: {net_income}\nOperating Income: {operating_income}\nGross Profit: {gross_profit}"
 
 
         chart_text = f"{chart}"
         company_overview_text = f"{company_overview}"
         balance_sheet_text = f"{balance_sheet_variables_text}"
         cash_flow_text = f"{cash_flow_variables_text}"
+        income_statement_text = f"{income_statement_variables_text}"
         
         yield Header("CoinBoard", classes="Header",)
         yield Footer("Empowering Investments, Simplifying Decisions!")
@@ -194,7 +220,7 @@ class CoinBoard(App):
             Vertical(
                 Static(f"{balance_sheet_text}"),
                 Static(f"{cash_flow_variables_text}"),
-                Static("Income Statement"),
+                Static(f"{income_statement_variables_text}"),
                 classes="column",
             ),
         )
@@ -342,7 +368,7 @@ if __name__ == "__main__":
     # if income_statement_data:
     #     print("\nIncome Statement Data:")
     #     print("-----------------------")
-    #     fiscal_date_ending, total_revenue, net_income, operating_income, gross_profit = income_statement_data
+        # fiscal_date_ending, total_revenue, net_income, operating_income, gross_profit = income_statement_data
     #     print(f"Fiscal Date Ending: {fiscal_date_ending}")
     #     print(f"Total Revenue: {total_revenue}")
     #     print(f"Net Income: {net_income}")
