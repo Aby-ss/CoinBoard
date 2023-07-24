@@ -94,7 +94,7 @@ class CoinBoard(App):
             address = re.search(r"Address: (.+)", overview_text).group(1)
             asset_type = re.search(r"AssetType: (.+)", overview_text).group(1)
             
-            company_overview = f"{name}\n{description}\n\nIndustry: {industry}\nSection: {sector}\nAddress: {address}\ncurrency: {currency}"
+            company_overview = f"{name}\n\n{description}\n\n\nIndustry: {industry}\nSection: {sector}\nAddress: {address}\ncurrency: {currency}"
             
 
             
@@ -106,11 +106,12 @@ class CoinBoard(App):
         yield Horizontal(
             Vertical(
                 Static(f"{chart_text}"),
-                Static("More Information"),
+                Static(f"{company_overview_text}"),
+
                 classes="column",
             ),
             Vertical(
-                Static(f"{company_overview_text}"),
+                Static("More Information"),
                 classes="column",
             ),
         )
