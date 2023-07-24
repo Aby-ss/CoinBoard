@@ -1,5 +1,8 @@
 # CoinBoard
 
+![image](https://github.com/Aby-ss/CoinBoard/assets/103417697/fc75d7e5-5a44-4083-bcbd-0ee15161abaf)
+
+
 **CoinBoard is a command-line interface (CLI) tool that provides real-time market data for both cryptocurrencies and stocks. It utilizes APIs to fetch and showcase the latest stock values in a visually appealing manner using the powerful Rich and Textual library in Python.**
 
 ## Features
