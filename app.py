@@ -146,9 +146,57 @@ def get_company_overview(api_key, symbol):
                 
     except requests.exceptions.RequestException as e:
         print(f"Error: {e}")
+        
+def get_financial_data(api_key, symbol, function):
+    base_url = 'https://www.alphavantage.co/query'
 
+    params = {
+        'function': function,
+        'symbol': symbol,
+        'apikey': api_key
+    }
 
-    
+    try:
+        response = requests.get(base_url, params=params)
+        data = response.json()
+
+        if 'Error Message' in data:
+            print(f"Error: {data['Error Message']}")
+            return None
+        else:
+            return data
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error: {e}")
+        return None
+
+def balance_sheet(api_key, symbol):
+    return get_financial_data(api_key, symbol, 'BALANCE_SHEET')
+
+def cash_flow(api_key, symbol):
+    return get_financial_data(api_key, symbol, 'CASH_FLOW')
+
+def income_statement(api_key, symbol):
+    return get_financial_data(api_key, symbol, 'INCOME_STATEMENT')
+
 if __name__ == "__main__":
-    app = CoinBoard()
-    app.run()
+    api_key = "78H5RH2BRNG4G5Z6"
+    stock_symbol = "AAPL"  # Replace with the desired stock symbol
+
+    balance_sheet_data = balance_sheet(api_key, stock_symbol)
+    if balance_sheet_data:
+        print("Balance Sheet Data:")
+        print("-------------------")
+        print(balance_sheet_data)
+
+    cash_flow_data = cash_flow(api_key, stock_symbol)
+    if cash_flow_data:
+        print("Cash Flow Data:")
+        print("----------------")
+        print(cash_flow_data)
+
+    income_statement_data = income_statement(api_key, stock_symbol)
+    if income_statement_data:
+        print("Income Statement Data:")
+        print("-----------------------")
+        print(income_statement_data)
