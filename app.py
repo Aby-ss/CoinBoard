@@ -38,7 +38,7 @@ class CoinBoard(App):
     def compose(self) -> ComposeResult:
         
         
-        
+        # --------------------------------------------- Charts ---------------------------------------------
         
         base_url = 'https://www.alphavantage.co/query'
         function = 'TIME_SERIES_DAILY'
@@ -70,6 +70,8 @@ class CoinBoard(App):
             chart = asciichartpy.plot(close_prices, {"width": 5, "height": 10, "format": "{:8.2f}"})
             # print(Panel(chart, title=f"Monthly Close Prices for {symbol}", border_style="bold white", box=box.SQUARE))
             
+        # --------------------------------------------- Company Overview ---------------------------------------------
+        
         company_overview_params = {
         'function': "OVERVIEW",
         'symbol': "AAPL",
@@ -98,7 +100,9 @@ class CoinBoard(App):
             
             company_overview = f"{name}\n\n{description}\n\n\nIndustry: {industry}\nSection: {sector}\nAddress: {address}\ncurrency: {currency}"
             
-
+            
+            # --------------------------------------------- Balance Sheet ---------------------------------------------
+            
             
         chart_text = f"{chart}"
         company_overview_text = f"{company_overview}"
