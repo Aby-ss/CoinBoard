@@ -3,9 +3,11 @@ import asciichartpy
 
 from rich import print, box
 from rich.panel import Panel
+from rich.layout import Layout
 from rich.traceback import install
 install(show_locals=True)
 
+layout = Layout()
 
 def get_daily_stock_data(symbol):
     base_url = 'https://www.alphavantage.co/query'
