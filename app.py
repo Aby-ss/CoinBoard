@@ -101,11 +101,60 @@ class CoinBoard(App):
             company_overview = f"{name}\n\n{description}\n\n\nIndustry: {industry}\nSection: {sector}\nAddress: {address}\ncurrency: {currency}"
             
             
+            def get_financial_data(function):
+                base_url = 'https://www.alphavantage.co/query'
+
+                params = {
+                    'function': function,
+                    'symbol': "AAPL",
+                    'apikey': "78H5RH2BRNG4G5Z6"
+                }
+
+                try:
+                    response = requests.get(base_url, params=params)
+                    data = response.json()
+
+                    if 'Error Message' in data:
+                        print(f"Error: {data['Error Message']}")
+                        return None
+                    else:
+                        return data
+
+                except requests.exceptions.RequestException as e:
+                    print(f"Error: {e}")
+                    return None
+            
             # --------------------------------------------- Balance Sheet ---------------------------------------------
             
+            def balance_sheet(api_key, symbol):
+                data = get_financial_data('BALANCE_SHEET')
+                if data:
+                    balance_sheet_data = data.get('annualReports', [])
+                    if balance_sheet_data:
+                        important_variables = (
+                            balance_sheet_data[0].get('fiscalDateEnding', ''),
+                            balance_sheet_data[0].get('totalAssets', ''),
+                            balance_sheet_data[0].get('totalLiabilities', ''),
+                            balance_sheet_data[0].get('totalEquity', ''),
+                            balance_sheet_data[0].get('cashAndCashEquivalents', ''),
+                            balance_sheet_data[0].get('grossProfit', '')
+                        )
+                        return important_variables
+                    else:
+                        print("Balance sheet data not available for this symbol.")
+                        return None     
+                           
+            balance_sheet_data = balance_sheet("78H5RH2BRNG4G5Z6", "AAPL")
+            if balance_sheet_data:
+
+                fiscal_date_ending, total_assets, total_liabilities, total_equity, cash_and_equivalents, gross_profit = balance_sheet_data
+            
+                balance_sheet_variables_text = f"Fiscal Date Ending: {fiscal_date_ending}\nTotal Assets: {total_assets}\nTotal Liabilities: {total_liabilities}\nTotal Equity: {total_equity}\nCash and Cash Equivalents: {cash_and_equivalents}\nGross Profit: {gross_profit}"
+
             
         chart_text = f"{chart}"
         company_overview_text = f"{company_overview}"
+        balance_sheet_text = f"{balance_sheet_variables_text}"
         
         yield Header("CoinBoard", classes="Header",)
         yield Footer("Empowering Investments, Simplifying Decisions!")
@@ -116,7 +165,7 @@ class CoinBoard(App):
                 classes="column",
             ),
             Vertical(
-                Static("Balance Sheet"),
+                Static(f"{balance_sheet_text}"),
                 Static("Cash Flow"),
                 Static("Income Statement"),
                 classes="column",
@@ -230,43 +279,45 @@ def income_statement(api_key, symbol):
             return None
 
 if __name__ == "__main__":
-    api_key = "78H5RH2BRNG4G5Z6"
-    stock_symbol = "MSFT"  # Replace with the desired stock symbol
+    app = CoinBoard()
+    app.run()
+    # api_key = "78H5RH2BRNG4G5Z6"
+    # stock_symbol = "MSFT"  # Replace with the desired stock symbol
 
-    # Balance Sheet
-    balance_sheet_data = balance_sheet(api_key, stock_symbol)
-    if balance_sheet_data:
-        print("Balance Sheet Data:")
-        print("-------------------")
-        fiscal_date_ending, total_assets, total_liabilities, total_equity, cash_and_equivalents, gross_profit = balance_sheet_data
-        print(f"Fiscal Date Ending: {fiscal_date_ending}")
-        print(f"Total Assets: {total_assets}")
-        print(f"Total Liabilities: {total_liabilities}")
-        print(f"Total Equity: {total_equity}")
-        print(f"Cash and Cash Equivalents: {cash_and_equivalents}")
-        print(f"Gross Profit: {gross_profit}")
+    # # Balance Sheet
+    # balance_sheet_data = balance_sheet(api_key, stock_symbol)
+    # if balance_sheet_data:
+    #     print("Balance Sheet Data:")
+    #     print("-------------------")
+        # fiscal_date_ending, total_assets, total_liabilities, total_equity, cash_and_equivalents, gross_profit = balance_sheet_data
+        # print(f"Fiscal Date Ending: {fiscal_date_ending}")
+        # print(f"Total Assets: {total_assets}")
+        # print(f"Total Liabilities: {total_liabilities}")
+        # print(f"Total Equity: {total_equity}")
+        # print(f"Cash and Cash Equivalents: {cash_and_equivalents}")
+        # print(f"Gross Profit: {gross_profit}")
 
-    # Cash Flow
-    cash_flow_data = cash_flow(api_key, stock_symbol)
-    if cash_flow_data:
-        print("\nCash Flow Data:")
-        print("----------------")
-        fiscal_date_ending, operating_cashflow, investing_cashflow, financing_cashflow, free_cashflow, gross_profit = cash_flow_data
-        print(f"Fiscal Date Ending: {fiscal_date_ending}")
-        print(f"Operating Cashflow: {operating_cashflow}")
-        print(f"Investing Cashflow: {investing_cashflow}")
-        print(f"Financing Cashflow: {financing_cashflow}")
-        print(f"Free Cashflow: {free_cashflow}")
-        print(f"Gross Profit: {gross_profit}")
+    # # Cash Flow
+    # cash_flow_data = cash_flow(api_key, stock_symbol)
+    # if cash_flow_data:
+    #     print("\nCash Flow Data:")
+    #     print("----------------")
+    #     fiscal_date_ending, operating_cashflow, investing_cashflow, financing_cashflow, free_cashflow, gross_profit = cash_flow_data
+    #     print(f"Fiscal Date Ending: {fiscal_date_ending}")
+    #     print(f"Operating Cashflow: {operating_cashflow}")
+    #     print(f"Investing Cashflow: {investing_cashflow}")
+    #     print(f"Financing Cashflow: {financing_cashflow}")
+    #     print(f"Free Cashflow: {free_cashflow}")
+    #     print(f"Gross Profit: {gross_profit}")
 
-    # Income Statement
-    income_statement_data = income_statement(api_key, stock_symbol)
-    if income_statement_data:
-        print("\nIncome Statement Data:")
-        print("-----------------------")
-        fiscal_date_ending, total_revenue, net_income, operating_income, gross_profit = income_statement_data
-        print(f"Fiscal Date Ending: {fiscal_date_ending}")
-        print(f"Total Revenue: {total_revenue}")
-        print(f"Net Income: {net_income}")
-        print(f"Operating Income: {operating_income}")
-        print(f"Gross Profit: {gross_profit}")
+    # # Income Statement
+    # income_statement_data = income_statement(api_key, stock_symbol)
+    # if income_statement_data:
+    #     print("\nIncome Statement Data:")
+    #     print("-----------------------")
+    #     fiscal_date_ending, total_revenue, net_income, operating_income, gross_profit = income_statement_data
+    #     print(f"Fiscal Date Ending: {fiscal_date_ending}")
+    #     print(f"Total Revenue: {total_revenue}")
+    #     print(f"Net Income: {net_income}")
+    #     print(f"Operating Income: {operating_income}")
+    #     print(f"Gross Profit: {gross_profit}")
