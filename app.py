@@ -64,7 +64,7 @@ class Taskwise(App):
                 close_prices.append(float(values['4. close']))
 
             # Create and display ASCII chart
-            chart = asciichartpy.plot(close_prices, {"height": 20, "format": "{:8.2f}"})
+            chart = asciichartpy.plot(close_prices, {"width": 5, "height": 10, "format": "{:8.2f}"})
             # print(Panel(chart, title=f"Monthly Close Prices for {symbol}", border_style="bold white", box=box.SQUARE))
 
             
@@ -75,11 +75,11 @@ class Taskwise(App):
         yield Horizontal(
             Vertical(
                 Static(f"{column_text}"),
-                Static(f"{column_text}"),
+                Static("More Information"),
                 classes="column",
             ),
             Vertical(
-                Static(f"{column_text}"),
+                Static("Company Information"),
                 classes="column",
             ),
         )
