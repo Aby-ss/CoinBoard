@@ -1,4 +1,5 @@
 import requests
+import asciichartpy
 
 from rich import print, box
 from rich.panel import Panel
@@ -26,8 +27,16 @@ def get_daily_stock_data(api_key, symbol):
             print(f"Error: {data['Error Message']}")
         else:
             time_series = data['Time Series (Daily)']
+            dates = []
+            close_prices = []
+
             for date, values in time_series.items():
-                print(Panel(f"Date: {date}, Open: {values['1. open']}, High: {values['2. high']}, Low: {values['3. low']}, Close: {values['4. close']}, Volume: {values['5. volume']}", title=f"{symbol}-{date}", title_align="left", border_style="bold white", box=box.SQUARE))
+                dates.append(date)
+                close_prices.append(float(values['4. close']))
+
+            # Create and display ASCII chart
+            chart = asciichartpy.plot(close_prices, {"height": 20, "format": "{:8.2f}"})
+            print(chart)
                 
     except requests.exceptions.RequestException as e:
         print(f"Error: {e}")
