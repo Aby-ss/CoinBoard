@@ -36,7 +36,7 @@ def get_daily_stock_data(api_key, symbol):
 
             # Create and display ASCII chart
             chart = asciichartpy.plot(close_prices, {"height": 20, "format": "{:8.2f}"})
-            print(chart)
+            print(Panel(chart, title=f"Monthly Close Prices for {symbol}", border_style="bold white", box=box.SQUARE))
                 
     except requests.exceptions.RequestException as e:
         print(f"Error: {e}")
