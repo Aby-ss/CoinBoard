@@ -1,5 +1,11 @@
 import requests
 
+from rich import print, box
+from rich.panel import Panel
+from rich.traceback import install
+install(show_locals=True)
+
+
 def get_daily_stock_data(api_key, symbol):
     base_url = 'https://www.alphavantage.co/query'
     function = 'TIME_SERIES_DAILY'
