@@ -107,11 +107,12 @@ class CoinBoard(App):
             Vertical(
                 Static(f"{chart_text}"),
                 Static(f"{company_overview_text}"),
-
                 classes="column",
             ),
             Vertical(
-                Static("More Information"),
+                Static("Balance Sheet"),
+                Static("Cash Flow"),
+                Static("Income Statement"),
                 classes="column",
             ),
         )
