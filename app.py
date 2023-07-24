@@ -151,10 +151,37 @@ class CoinBoard(App):
             
                 balance_sheet_variables_text = f"Fiscal Date Ending: {fiscal_date_ending}\nTotal Assets: {total_assets}\nTotal Liabilities: {total_liabilities}\nTotal Equity: {total_equity}\nCash and Cash Equivalents: {cash_and_equivalents}\nGross Profit: {gross_profit}"
 
+            # --------------------------------------------- Cash Flow ---------------------------------------------
             
+            def cash_flow(api_key, symbol):
+                data = get_financial_data('CASH_FLOW')
+                if data:
+                    cash_flow_data = data.get('annualReports', [])
+                    if cash_flow_data:
+                        important_variables = (
+                            cash_flow_data[0].get('fiscalDateEnding', ''),
+                            cash_flow_data[0].get('operatingCashflow', ''),
+                            cash_flow_data[0].get('investingCashflow', ''),
+                            cash_flow_data[0].get('financingCashflow', ''),
+                            cash_flow_data[0].get('freeCashflow', ''),
+                            cash_flow_data[0].get('grossProfit', '')
+                        )
+                        return important_variables
+                    else:
+                        print("Cash flow data not available for this symbol.")
+                        return None
+
+            cash_flow_data = cash_flow("78H5RH2BRNG4G5Z6", "AAPL")
+            if cash_flow_data:
+                fiscal_date_ending, operating_cashflow, investing_cashflow, financing_cashflow, free_cashflow, gross_profit = cash_flow_data
+                
+                cash_flow_variables_text = f"Fiscal Date Ending: {fiscal_date_ending}\nOperating Cash Flow: {operating_cashflow}\nInvesting Cash Flow: {investing_cashflow}\nFinancing Cash Flow: {financing_cashflow}\nFree Cash Flow: {free_cashflow}\nGross Profit: {gross_profit}"
+
+
         chart_text = f"{chart}"
         company_overview_text = f"{company_overview}"
         balance_sheet_text = f"{balance_sheet_variables_text}"
+        cash_flow_text = f"{cash_flow_variables_text}"
         
         yield Header("CoinBoard", classes="Header",)
         yield Footer("Empowering Investments, Simplifying Decisions!")
@@ -166,7 +193,7 @@ class CoinBoard(App):
             ),
             Vertical(
                 Static(f"{balance_sheet_text}"),
-                Static("Cash Flow"),
+                Static(f"{cash_flow_variables_text}"),
                 Static("Income Statement"),
                 classes="column",
             ),
@@ -302,7 +329,7 @@ if __name__ == "__main__":
     # if cash_flow_data:
     #     print("\nCash Flow Data:")
     #     print("----------------")
-    #     fiscal_date_ending, operating_cashflow, investing_cashflow, financing_cashflow, free_cashflow, gross_profit = cash_flow_data
+        # fiscal_date_ending, operating_cashflow, investing_cashflow, financing_cashflow, free_cashflow, gross_profit = cash_flow_data
     #     print(f"Fiscal Date Ending: {fiscal_date_ending}")
     #     print(f"Operating Cashflow: {operating_cashflow}")
     #     print(f"Investing Cashflow: {investing_cashflow}")
